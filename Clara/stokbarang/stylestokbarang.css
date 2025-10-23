@@ -1,0 +1,154 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #86AADF;
+  color: #1D3557;
+  padding: 24px;
+}
+
+/* === HEADER === */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img {
+  width: 80px;
+  height: auto;
+}
+
+.logo h1 {
+  font-size: 2rem;
+  color: #1D3557;
+  font-weight: 700;
+}
+
+.main-header nav a {
+  text-decoration: none;
+  color: #1D3557;
+  font-size: 1rem;
+}
+
+.main-header nav a.active {
+  font-weight: 700;
+}
+
+/* === CARD === */
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
+  padding: 24px;
+}
+
+/* === FILTER === */
+.filter-card {
+  display: flex;
+  justify-content: flex-start; /* ubah dari space-between */
+  align-items: flex-end;
+  gap: 350px; /* atur jarak antar form */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+  font-family: 'Poppins', sans-serif;
+  padding: 10px 14px;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  min-width: 250px;
+}
+
+.form-group input::placeholder {
+  color: #9CA3AF;
+}
+
+/* === TABLE === */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+thead {
+  background-color: #86AADF;
+  color: #1D3557;
+}
+
+th, td {
+  padding: 16px;
+  text-align: center;
+  border: 1px solid #E5E7EB;
+}
+
+tbody td {
+  color: #555;
+}
+
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.data-info {
+  font-size: 0.9rem;
+  color: #6B7280;
+}
+
+.pagination {
+  display: flex;
+  gap: 8px;
+}
+
+.pagination button {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid #9CA3AF;
+  background-color: white;
+  color: #86AADF;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pagination button.active {
+  background-color: #86AADF;
+  color: white;
+}
+
+.pagination button:hover:not(:disabled):not(.active) {
+  background-color: #E5E7EB;
+  color: #1D3557;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
