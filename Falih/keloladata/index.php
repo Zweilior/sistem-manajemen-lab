@@ -26,6 +26,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     header('Location: index.php');
     exit;
 }
+
+if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
+    
+    include __DIR__ . '/koneksi.php'; 
+    $id_item = (int)$_GET['id'];
+
+    if ($id_item > 0) {
+        $stok_query = mysqli_query($koneksi, "SELECT id_stok FROM stok_lab WHERE id_item = $id_item");
+        if(mysqli_num_rows($stok_query) > 0) {
+            $stok_data = mysqli_fetch_assoc($stok_query);
+            $id_stok = $stok_data['id_stok'];
+            
+            mysqli_query($koneksi, "DELETE FROM transaksi_stok WHERE id_stok = $id_stok");
+        }
+
+        mysqli_query($koneksi, "DELETE FROM stok_lab WHERE id_item = $id_item");
+        mysqli_query($koneksi, "DELETE FROM item_alat_bahan WHERE id_item = $id_item");
+    }
+
+    header('Location: index.php');
+    exit;
+}
 ?>
 <?php
 include __DIR__ . '/koneksi.php'; 
@@ -83,13 +105,7 @@ $data_di_halaman_ini = mysqli_num_rows($query_data);
     <title>Kelola Data Laboratorium</title>
     <link rel="stylesheet" href="keloladata.css">
     
-    <style>
-        .filter-card .btn-primary { 
-            margin-left: auto; 
-            align-self: flex-end; 
-        }
-    </style>
-</head>
+    </head>
 <body>
 
     <div class="container">
@@ -158,8 +174,9 @@ $data_di_halaman_ini = mysqli_num_rows($query_data);
                         <td><?php echo htmlspecialchars($data['jumlah']); ?></td>
                         <td>
                             <a href="edit/edit.php?id=<?php echo $data['id_item']; ?>" class="btn btn-edit">Edit</a>
-                            <a href="hapus.php?id=<?php echo $data['id_item']; ?>" class="btn btn-delete" 
-                               onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">Hapus</a>
+                            
+                            <a href="index.php?action=delete&id=<?php echo $data['id_item']; ?>" class="btn btn-delete" 
+                               onclick="showDeleteModal(event, this.href);">Hapus</a>
                         </td>
                     </tr>
                     <?php
@@ -200,9 +217,44 @@ $data_di_halaman_ini = mysqli_num_rows($query_data);
 
     </div> 
     
+
+    <div id="deleteModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h4>Konfirmasi Hapus</h4>
+            <p>Apakah Anda yakin ingin menghapus data ini?</p>
+            <div class="modal-buttons">
+                <button id="modalCancel" class="btn btn-secondary">Cancel</button>
+                <a id="modalConfirm" href="#" class="btn btn-delete">OK</a>
+            </div>
+        </div>
+    </div>
+
+
     <script>
+        // Script untuk filter Kategori
         document.getElementById('kategori').addEventListener('change', function() {
             this.form.submit();
+        });
+
+        // --- Script untuk Modal Hapus ---
+        const modal = document.getElementById('deleteModal');
+        const btnCancel = document.getElementById('modalCancel');
+        const btnConfirm = document.getElementById('modalConfirm');
+
+        function showDeleteModal(event, deleteUrl) {
+            event.preventDefault(); 
+            btnConfirm.href = deleteUrl;
+            modal.style.display = 'flex';
+        }
+
+        btnCancel.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
         });
     </script>
 
