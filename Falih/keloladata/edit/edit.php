@@ -33,7 +33,7 @@ $query_kategori = mysqli_query($koneksi, "SELECT * FROM kategori_item ORDER BY n
     <div class="container">
         <header class="header">
             <div class="header-title">
-                <img src="../ikon.png" alt="Ikon Lab" class="header-icon">
+                <img src="../img/ikon.png" alt="Ikon Lab" class="header-icon">
                 <h1>KELOLA DATA</h1>
             </div>
             <nav class="breadcrumbs">
