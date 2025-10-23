@@ -1,16 +1,13 @@
 <?php
+$host = 'localhost';
+$db   = 'laboratorium';
+$user = 'root';
+$pass = '';
 
-// 1. Definisikan parameter koneksi
-$db_host = "localhost";      
-$db_user = "root";           
-$db_pass = "";               
-$db_name = "laboratorium"; // <-- NAMA DATABASE SUDAH DISESUAIKAN
-
-// 2. Buat koneksi
-$koneksi = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
-
-// 3. Cek koneksi
-if (!$koneksi) {
-    die("Koneksi Gagal: " . mysqli_connect_error());
+$dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
+try {
+    $pdo = new PDO($dsn, $user, $pass,
+                   [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+} catch (PDOException $e) {
+    exit("Koneksi gagal: " . $e->getMessage());
 }
-?>
