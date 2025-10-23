@@ -1,0 +1,151 @@
+/* --- Global & Background --- */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #a9c5e8; /* Warna biru muda latar belakang */
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* --- Container Utama --- */
+.container {
+    width: 100%;
+    max-width: 800px; /* Atur lebar maksimum form */
+    margin: 0 auto;
+}
+
+/* --- Header --- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-icon {
+    width: 50px; /* Ukuran ikon lab */
+    height: auto;
+}
+
+.header h1 {
+    font-size: 2.5rem; /* Ukuran "KELOLA DATA" */
+    font-weight: bold;
+    color: #1d2a4a; /* Warna biru tua */
+    margin: 0;
+}
+
+.breadcrumbs {
+    font-size: 1rem;
+    color: #1d2a4a;
+    font-weight: 500;
+}
+
+/* --- Card Form Putih --- */
+.card {
+    background-color: #ffffff;
+    border-radius: 20px; /* Sudut sangat bulat */
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-sizing: border-box; /* Agar padding tidak menambah lebar */
+}
+
+/* --- Form --- */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Jarak antar field */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Label & input center */
+    width: 100%;
+}
+
+.form-group label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #1d2a4a; /* Warna biru tua */
+    margin-bottom: 8px;
+}
+
+/* --- Input & Select --- */
+.form-group input[type="text"],
+.form-group select {
+    width: 100%;
+    max-width: 400px; /* Lebar maksimum input */
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px; /* Sudut bulat input */
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    text-align: center; /* Teks placeholder di tengah */
+}
+
+.form-group input[type="text"]::placeholder {
+    color: #999;
+}
+
+/* Kustomisasi tampilan select agar mirip */
+.form-group select {
+    appearance: none; /* Hapus panah default */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%2012%208%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M1.41%200.58L6%205.17L10.59%200.58L12%202L6%208L0%202L1.41%200.58Z%22%20fill%3D%22%23333%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 12px;
+    padding-right: 40px; /* Ruang untuk panah kustom */
+}
+
+/* --- Button Container --- */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Jarak antar tombol */
+    margin-top: 30px; /* Jarak dari field terakhir */
+    flex-wrap: wrap; /* Agar tombol rapi di layar kecil */
+}
+
+/* --- Buttons --- */
+.btn {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #1d2a4a; /* Warna biru tua tombol */
+    border: none;
+    border-radius: 10px; /* Sudut bulat tombol */
+    cursor: pointer;
+    text-decoration: none; /* Untuk jika tombolnya <a> */
+    text-align: center;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn:hover {
+    background-color: #3b5080; /* Warna hover sedikit lebih terang */
+    transform: translateY(-2px); /* Efek sedikit terangkat */
+}
+
+/* Anda bisa bedakan warna jika perlu, 
+   misal: tombol 'batal' warna lain */
+.btn-secondary {
+    background-color: #6c757d;
+}
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
