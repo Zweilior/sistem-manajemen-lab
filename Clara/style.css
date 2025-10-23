@@ -1,0 +1,131 @@
+/* === GLOBAL === */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding-top: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('backgroundhome.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #07244b;
+}
+
+/* === HEADER === */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  padding: 30px 65px;
+  box-sizing: border-box;
+}
+
+/* WELCOME TO STOKLAB */
+.header-left h2 {
+  margin: 0;
+  font-weight: 600;
+  color: #07244b;
+  letter-spacing: 1px;
+}
+
+/* SELECT MENU + ikon */
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-title h1 {
+  margin: 0px 0;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white; /* warna putih */
+  text-transform: uppercase;
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+}
+
+.header-title img {
+  width: 40px;
+  height: 40px;
+}
+
+/* Garis bawah */
+.header-line {
+  border: none;
+  border-top: 2px solid rgba(0, 27, 61, 0.6);
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* Tombol logout */
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #07244b;
+  font-weight: 600;
+  border: 2px solid #07244b;
+  padding: 8px 15px;
+  border-radius: 25px;
+  transition: 0.3s;
+  margin-top: 25px;
+}
+
+
+.logout-btn img {
+  width: 30px;
+  height: 30px;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #07244b;
+  color: white;
+}
+
+.logout-btn:hover img {
+  filter: brightness(0) invert(1);
+}
+
+
+/* === MENU CONTAINER === */
+.menu-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin-top: 100px;
+  flex-wrap: wrap;
+}
+
+.menu-card {
+  background-color: #07244b;
+  color: white;
+  width: 220px;
+  height: 150px;
+  border-radius: 20px;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.menu-card.active {
+  background-color: white;
+  color: #07244b;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.menu-card:hover {
+  transform: translateY(-5px);
+}
+
+.menu-card img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 5px;
+}
