@@ -1,0 +1,151 @@
+/* ---------- Google Font (opsional) ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* ---------- Background ---------- */
+body {
+    height: 100vh;
+    background: url('../img/bg_login.png') no-repeat center/cover fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---------- Dark Overlay ---------- */
+.overlay {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---------- Login Box ---------- */
+.login-box {
+    width: 90%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 45px 40px 35px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* ---------- Logo & Teks ---------- */
+.logo {
+    font-size: 2.6rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #111;
+    margin-bottom: 8px;
+}
+
+.greet {
+    font-size: 1.05rem;
+    color: #444;
+    margin-bottom: 4px;
+}
+
+.sub-greet {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 28px;
+}
+
+.sub-greet .bold {
+    font-weight: 600;
+    color: #000;
+}
+
+/* ---------- Form ---------- */
+form input[type="text"],
+form input[type="password"] {
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border 0.3s;
+}
+
+form input:focus {
+    border-color: #222;
+    outline: none;
+}
+
+.logout-btn {
+    background: #fff;
+    color: #4f81bd;
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+
+.check {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 22px;
+}
+
+.check input {
+    margin-right: 8px;
+}
+
+/* ---------- Tombol ---------- */
+button {
+    width: 100%;
+    padding: 14px;
+    background: #111;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #333;
+}
+
+/* ---------- Link ---------- */
+.extra {
+    margin-top: 22px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.extra a {
+    color: #111;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.extra a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+    .logo {
+        font-size: 2.2rem;
+    }
+    .login-box {
+        padding: 35px 25px;
+    }
+}
+

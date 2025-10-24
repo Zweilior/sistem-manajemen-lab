@@ -1,0 +1,171 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #86AADF;
+  color: #1D3557;
+  padding: 24px;
+}
+
+/* === HEADER === */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img {
+  width: 80px;
+  height: auto;
+}
+
+.logo h1 {
+  font-size: 2rem;
+  color: #1D3557;
+  font-weight: 700;
+}
+
+.main-header nav a {
+  text-decoration: none;
+  color: #1D3557;
+  font-size: 1rem;
+}
+
+.main-header nav a.active {
+  font-weight: 700;
+}
+
+/* === CARD === */
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 24px;
+  padding: 24px;
+}
+
+/* === FILTER === */
+.filter-card {
+  display: flex;
+  justify-content: flex-start; /* ubah dari space-between */
+  align-items: flex-end;
+  gap: 350px; /* atur jarak antar form */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+  font-family: 'Poppins', sans-serif;
+  padding: 10px 14px;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  min-width: 250px;
+}
+
+.form-group input::placeholder {
+  color: #9CA3AF;
+}
+
+/* === TABLE === */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+thead {
+  background-color: #86AADF;
+  color: #1D3557;
+}
+
+th, td {
+  padding: 16px;
+  text-align: center;
+  border: 1px solid #E5E7EB;
+}
+
+tbody td {
+  color: #555;
+}
+
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.data-info {
+  font-size: 0.9rem;
+  color: #6B7280;
+}
+
+
+.pagination {
+  display: flex; /* Menyusun tombol secara horizontal */
+  align-items: center; /* Menyelaraskan tombol secara vertikal */
+  gap: 5px; /* Memberi jarak antar tombol */
+}
+
+/* Gaya umum untuk panah dan nomor halaman */
+.pagination .page-arrow,
+.pagination .page-number {
+  display: inline-block; /* Agar bisa diberi ukuran */
+  width: 36px;
+  height: 36px;
+  line-height: 36px; /* Vertikal center teks */
+  text-align: center; /* Horizontal center teks */
+  border-radius: 6px;
+  border: 1px solid #9CA3AF;
+  background-color: white;
+  color: #86AADF; /* Warna teks biru muda */
+  cursor: pointer;
+  text-decoration: none; /* Hapus garis bawah link */
+  transition: background-color 0.2s, color 0.2s; /* Efek transisi halus */
+}
+
+/* Gaya untuk nomor halaman AKTIF */
+/* Target spesifik <span> atau <a> yang memiliki class active */
+.pagination .page-number.active {
+  background-color: #86AADF; /* Latar biru muda */
+  color: white; /* Teks putih */
+  border-color: #86AADF; /* Samakan border */
+  cursor: default; /* Tidak perlu cursor pointer */
+}
+
+/* Gaya HOVER untuk panah dan nomor yang TIDAK aktif/disabled */
+.pagination .page-arrow:not(.disabled):hover,
+.pagination .page-number:not(.active):hover {
+  background-color: #E5E7EB; /* Latar abu-abu muda */
+  color: #1D3557; /* Warna teks biru tua */
+}
+
+/* Gaya untuk panah DISABLED */
+/* Target <span> yang memiliki class disabled */
+.pagination .page-arrow.disabled {
+  opacity: 0.5; /* Sedikit transparan */
+  cursor: not-allowed; /* Cursor tanda tidak bisa diklik */
+  color: #9CA3AF; /* Warna teks abu-abu */
+  background-color: white; /* Pastikan latar tetap putih */
+}
