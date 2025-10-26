@@ -11,11 +11,21 @@ body {
     padding: 24px;
 }
 
+
+.container {
+    width: 100%;
+    max-width: 800px; 
+    margin: 0 auto;
+}
+
 .main-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center; 
+    align-items: center;     
+    gap: 30px;                
+    flex-wrap: wrap;        
     margin-bottom: 24px;
+    padding: 15px 10px;      
 }
 
 .logo {
@@ -212,8 +222,11 @@ tbody td {
 
 .form-card {
     padding: 40px 24px; 
-    max-width: auto;   
-    margin: 0 auto;     
+    max-width: 700px;   
+    margin: 20px auto;  
+    border-radius: 16px; 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07); 
+    background-color: #FFFFFF; 
 }
 
 .form-container {

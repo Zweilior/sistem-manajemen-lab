@@ -1,9 +1,14 @@
 <?php
-// 1. Hubungkan ke database (PDO)
-include __DIR__ . '/../../config/koneksi.php';
+include __DIR__ . '/../../config/koneksi.php'; 
 
-// 2. Query untuk mengambil kategori menggunakan PDO
-$stmt_kategori = $pdo->query("SELECT * FROM kategori_item ORDER BY nama_kategori ASC");
+try {
+    $stmt_kategori = $pdo->query("SELECT * FROM kategori_item ORDER BY nama_kategori ASC");
+    $semua_kategori = $stmt_kategori->fetchAll(PDO::FETCH_ASSOC); 
+} catch (PDOException $e) {
+    error_log("Gagal mengambil kategori: " . $e->getMessage());
+    $semua_kategori = []; 
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -11,26 +16,29 @@ $stmt_kategori = $pdo->query("SELECT * FROM kategori_item ORDER BY nama_kategori
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Data Barang</title>
-    
-    <link rel="stylesheet" href="../../assets/css/tambah_keloladata.css"> 
+
+    <link rel="stylesheet" href="../../assets/css/tambah_keloladata.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="container">
         <header class="header">
             <div class="header-title">
-                <img src="../../assets/img/ikon.png" alt="Ikon Lab" class="header-icon"> 
+                <img src="../../assets/img/ikon.png" alt="Ikon Lab" class="header-icon">
                 <h1>TAMBAH DATA BARANG</h1>
             </div>
-        <nav>
-            <a href="../keloladata/index.php">Kembali</a> |
-            <a href="#" class="active">Tambah Data</a>
-        </nav>
+            <nav class="breadcrumbs">
+                <a href="../dashboard.php">Beranda</a> |
+                <a href="#" class="active">Tambah Data Barang</a>
+            </nav>
         </header>
 
         <div class="card form-card">
             <form action="index.php" method="POST" class="form-container">
-                
+
                 <input type="hidden" name="action" value="create">
 
                 <div class="form-group">
@@ -43,10 +51,9 @@ $stmt_kategori = $pdo->query("SELECT * FROM kategori_item ORDER BY nama_kategori
                     <select id="kategori" name="id_kategori" required>
                         <option value="" disabled selected>-- Pilih Kategori --</option>
                         <?php
-                        // 4. Loop kategori menggunakan PDO
-                        while ($kategori = $stmt_kategori->fetch(PDO::FETCH_ASSOC)) {
-                            echo '<option value="' . $kategori['id_kategori'] . '">' 
-                                 . htmlspecialchars($kategori['nama_kategori']) 
+                        foreach ($semua_kategori as $kategori) {
+                            echo '<option value="' . htmlspecialchars($kategori['id_kategori']) . '">'
+                                 . htmlspecialchars($kategori['nama_kategori'])
                                  . '</option>';
                         }
                         ?>
@@ -60,12 +67,12 @@ $stmt_kategori = $pdo->query("SELECT * FROM kategori_item ORDER BY nama_kategori
 
                 <div class="form-group">
                     <label for="jumlah">Jumlah:</label>
-                    <input type="number" id="jumlah" name="jumlah" placeholder="Masukkan dalam bentuk angka" required>
-                </div>
+                    <input type="text" id="jumlah" name="jumlah" placeholder="Masukkan dalam bentuk angka" required
+                           pattern="[0-9]+" title="Hanya masukkan angka positif"> </div>
 
                 <div class="button-group">
-                    <button type="submit" class="btn">+ Tambah Barang</button>
-                    <a href="index.php" class="btn">Lihat Data</a>
+                    <button type="submit" class="btn btn-primary">+ Tambah Barang</button>
+                    <a href="index.php" class="btn btn-secondary">Lihat Data</a>
                 </div>
 
             </form>

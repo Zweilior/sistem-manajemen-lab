@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #86aadf; /* Warna background biru muda */
+    background-color: #86aadf; 
     color: #333;
     padding: 24px;
 }
@@ -16,8 +16,8 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
-    padding: 20px 24px; /* Tambahan padding vertikal agar header lebih luas */
-    min-height: 100px; /* Memastikan tinggi minimal untuk logo */
+    padding: 20px 24px; 
+    min-height: 100px; 
 }
 
 .logo {
@@ -26,14 +26,14 @@ body {
 }
 
 .logo-img {
-    width: 75px;  /* Lebar gambar logo */
-    height: auto; /* Tinggi otomatis agar proporsional */
-    margin-right: 15px; /* Jarak antara gambar dan teks "CATAT TRANSAKSI" */
+    width: 75px;  
+    height: auto; 
+    margin-right: 15px; 
 }
 
 .logo h1 {
     font-size: 1.75rem;
-    color: #1D3557; /* Biru tua untuk judul */
+    color: #1D3557; 
 }
 
 .main-header nav {
@@ -48,7 +48,7 @@ body {
 }
 
 .main-header nav a.active {
-    font-weight: 700; /* Bold */
+    font-weight: 700; 
 }
 
 .card {
@@ -61,7 +61,7 @@ body {
 .filter-card {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end; /* Penting agar tombol sejajar dengan input */
+    align-items: flex-end; 
     padding: 24px;
     gap: 20px;
 }
@@ -82,7 +82,7 @@ body {
     font-family: 'Poppins', sans-serif;
     font-size: 0.95rem;
     padding: 10px 14px;
-    border: 1px solid #D1D5DB; /* Abu-abu muda */
+    border: 1px solid #D1D5DB; 
     border-radius: 8px;
     min-width: 250px;
 }
@@ -113,7 +113,7 @@ body {
 }
 
 .btn-primary {
-    background-color: #1D3557; /* Biru tua */
+    background-color: #1D3557; 
     color: #FFFFFF;
 }
 
@@ -122,9 +122,7 @@ body {
 }
 
 .table-card {
-    /* Hapus padding agar tabel menempel sempurna */
     padding: 24px;
-    /* Sembunyikan overflow agar border-radius header tabel terlihat */
     overflow: hidden; 
 }
 
@@ -132,7 +130,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     border-radius: 8px;
-    overflow: hidden; /* Agar border-radius bekerja */
+    overflow: hidden; 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 
 }
@@ -140,7 +138,7 @@ table {
 th, td {
     padding: 16px;
     text-align: center;
-    border-bottom: 1px solid #EEE; /* Garis pemisah antar baris */
+    border-bottom: 1px solid #EEE; 
 }
 
 thead {
@@ -178,54 +176,47 @@ tbody td {
     color: #6B7280; 
 }
 
-/* Container utama pagination */
 .pagination {
-  display: flex; /* Menyusun elemen secara horizontal */
-  align-items: center; /* Menyelaraskan elemen secara vertikal */
-  gap: 5px; /* Memberi jarak antar elemen */
+  display: flex; 
+  align-items: center; 
+  gap: 5px; 
 }
 
-/* Gaya umum untuk panah (link <a>) dan nomor halaman (span <span>) */
 .pagination .page-arrow,
 .pagination .page-number {
-  display: inline-block; /* Agar bisa diberi ukuran */
+  display: inline-block; 
   width: 36px;
   height: 36px;
-  line-height: 36px; /* Vertikal center teks */
-  text-align: center; /* Horizontal center teks */
+  line-height: 36px; 
+  text-align: center; 
   border-radius: 6px;
-  border: 1px solid #9CA3AF; /* Border abu-abu */
+  border: 1px solid #9CA3AF; 
   background-color: white;
-  color: #86AADF; /* Warna teks biru muda default */
-  text-decoration: none; /* Hapus garis bawah link */
-  transition: background-color 0.2s, color 0.2s; /* Efek transisi halus */
+  color: #86AADF; 
+  text-decoration: none; 
+  transition: background-color 0.2s, color 0.2s; 
 }
 
-/* Gaya spesifik untuk panah (link <a>) */
 .pagination .page-arrow {
-  cursor: pointer; /* Cursor pointer untuk link */
+  cursor: pointer; 
 }
 
-/* Gaya untuk nomor halaman AKTIF (span <span>) */
 .pagination .page-number.active {
-  background-color: #86AADF; /* Latar biru muda */
-  color: white; /* Teks putih */
-  border-color: #86AADF; /* Samakan border */
-  cursor: default; /* Tidak perlu cursor pointer karena bukan link */
+  background-color: #86AADF; 
+  color: white; 
+  border-color: #86AADF; 
+  cursor: default; 
 }
 
-/* Gaya HOVER hanya untuk panah (link <a>) yang TIDAK disabled */
 .pagination .page-arrow:not(.disabled):hover {
-  background-color: #E5E7EB; /* Latar abu-abu muda */
-  color: #1D3557; /* Warna teks biru tua */
+  background-color: #E5E7EB; 
+  color: #1D3557; 
 }
 
-/* Gaya untuk panah DISABLED (link <a> dengan class .disabled) */
 .pagination .page-arrow.disabled {
-  opacity: 0.5; /* Sedikit transparan */
-  cursor: not-allowed; /* Cursor tanda tidak bisa diklik */
-  color: #9CA3AF; /* Warna teks abu-abu */
-  background-color: white; /* Pastikan latar tetap putih */
-  /* Mencegah hover effect pada link disabled */
+  opacity: 0.5; 
+  cursor: not-allowed; 
+  color: #9CA3AF; 
+  background-color: white; 
   pointer-events: none; 
 }

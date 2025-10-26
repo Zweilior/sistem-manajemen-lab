@@ -1,8 +1,6 @@
 <?php
-// 1. Sertakan koneksi PDO
-include __DIR__ . '/../../config/koneksi.php'; // Pastikan path ini benar
+include __DIR__ . '/../../config/koneksi.php'; 
 
-// --- LOGIKA PAGINATION DAN FILTER ---
 $jumlah_data_per_halaman = 3;
 
 $sql_where = " WHERE 1=1 ";
@@ -11,37 +9,22 @@ $join_clause = "LEFT JOIN stok_lab s ON t.id_stok = s.id_stok
 $params_url = [];
 $params_sql = [];
 
-// ==================================
-//     PERBAIKAN FILTER TANGGAL
-// ==================================
-// Filter berdasarkan pencarian tanggal
 if (!empty($_GET['search-tanggal'])) {
-    $tanggal_input = $_GET['search-tanggal']; // Tanggal dari input (misal: 24/10/2025)
+    $tanggal_input = $_GET['search-tanggal']; 
 
-    // Coba konversi format dd/mm/yyyy ke YYYY-MM-DD
     $date_obj = DateTime::createFromFormat('d/m/Y', $tanggal_input);
 
-    // Cek apakah konversi berhasil
     if ($date_obj !== false) {
-        $tanggal_sql = $date_obj->format('Y-m-d'); // Format untuk SQL (misal: 2025-10-24)
+        $tanggal_sql = $date_obj->format('Y-m-d'); 
 
-        // Gunakan tanggal format SQL dalam query
         $sql_where .= " AND DATE(t.tanggal_transaksi) = :tanggal ";
         $params_sql[':tanggal'] = $tanggal_sql;
-        // Simpan format asli untuk ditampilkan kembali di input
         $params_url['search-tanggal'] = $tanggal_input;
     } else {
-        // Jika format salah, jangan filter berdasarkan tanggal
-        // Opsional: Anda bisa tambahkan pesan error di sini
-        $params_url['search-tanggal'] = $tanggal_input; // Tetap tampilkan input asli
+        $params_url['search-tanggal'] = $tanggal_input; 
     }
 }
-// ==================================
-//   AKHIR PERBAIKAN FILTER TANGGAL
-// ==================================
 
-
-// Filter berdasarkan keterangan (jenis_transaksi)
 if (!empty($_GET['search-keterangan']) && in_array($_GET['search-keterangan'], ['masuk', 'keluar'])) {
     $keterangan = $_GET['search-keterangan'];
     $jenis_transaksi = ucfirst($keterangan);
@@ -53,7 +36,6 @@ if (!empty($_GET['search-keterangan']) && in_array($_GET['search-keterangan'], [
 $query_string = http_build_query($params_url);
 $link_prefix = $query_string ? "?$query_string&" : "?";
 
-// Hitung total data yang cocok
 try {
     $stmt_total = $pdo->prepare("
         SELECT COUNT(*) as total
@@ -68,22 +50,18 @@ try {
 }
 
 
-// Hitung total halaman
 $total_halaman = ceil($total_data / $jumlah_data_per_halaman);
 if ($total_halaman < 1) $total_halaman = 1;
 
-// Tentukan halaman aktif
 $halaman_aktif = (isset($_GET['halaman'])) ? (int)$_GET['halaman'] : 1;
 if ($halaman_aktif < 1) $halaman_aktif = 1;
 if ($halaman_aktif > $total_halaman) $halaman_aktif = $total_halaman;
 
 $data_awal = ($halaman_aktif - 1) * $jumlah_data_per_halaman;
 
-// Inisialisasi $data_transaksi sebagai array kosong
 $data_transaksi = [];
 $data_di_halaman_ini = 0;
 
-// Query untuk mengambil data transaksi per halaman
 try {
     $sql_data = "
         SELECT t.id_transaksi, t.id_stok, i.nama_item,
@@ -132,7 +110,7 @@ try {
         </div>
         <nav class="breadcrumbs">
             <a href="../dashboard.php">Beranda</a> |
-            <a href="index.php" class="active">Catat Transaksi</a>
+            <a href="index.php"class="active">Catat Transaksi</a>
         </nav>
     </header>
 
@@ -221,14 +199,11 @@ try {
     </main>
 
     <script>
-        // Auto-submit saat dropdown Keterangan diubah
         document.getElementById('search-keterangan').addEventListener('change', function() {
             document.getElementById('filterFormTransaksi').submit();
         });
 
-        // Event listener untuk form submit (menjalankan filter saat Enter di input tanggal atau klik tombol Cari)
         document.getElementById('filterFormTransaksi').addEventListener('submit', function(event) {
-            // Biarkan form berjalan normal (tidak perlu preventDefault)
         });
     </script>
 
