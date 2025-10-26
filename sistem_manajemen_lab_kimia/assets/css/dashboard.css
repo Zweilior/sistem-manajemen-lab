@@ -37,6 +37,7 @@ body {
   gap: 15px;
 }
 
+/* Judul SISTEM MANAJEMEN LAB KIMIA */
 .header-title h1 {
   margin: 0px 0;
   font-size: 2.5rem;
@@ -46,6 +47,7 @@ body {
   text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
 }
 
+/* Logo gambar */
 .header-title img {
   width: 40px;
   height: 40px;
@@ -74,18 +76,20 @@ body {
   margin-top: 25px;
 }
 
-
+/* Ikon pada tombol logout */
 .logout-btn img {
   width: 30px;
   height: 30px;
   transition: 0.3s;
 }
 
+/* Hover effect untuk tombol logout */
 .logout-btn:hover {
   background-color: #07244b;
   color: white;
 }
 
+/* Hover effect untuk ikon pada tombol logout */
 .logout-btn:hover img {
   filter: brightness(0) invert(1);
 }
@@ -101,6 +105,7 @@ body {
   flex-wrap: wrap;
 }
 
+/* === MENU CARD === */
 .menu-card {
   background-color: #07244b;
   color: white;
@@ -114,16 +119,19 @@ body {
   transition: 0.3s;
 }
 
+/* Styling untuk menu card yang aktif */
 .menu-card.active {
   background-color: white;
   color: #07244b;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+/* Hover effect untuk menu card */
 .menu-card:hover {
   transform: translateY(-5px);
 }
 
+/* Gambar pada menu card */
 .menu-card img {
   width: 60px;
   height: 60px;

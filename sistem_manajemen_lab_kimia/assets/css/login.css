@@ -1,11 +1,15 @@
+/* ---------- global ---------- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
+/* ---------- reset ---------- */
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
     font-family: 'Poppins', sans-serif;
 }
+
+/* ---------- body ---------- */
 body{
     height:100vh;
     background:url('../img/bg_login.png') no-repeat center/cover fixed;
@@ -13,6 +17,8 @@ body{
     align-items:center;
     justify-content:center;
 }
+
+/* ---------- dark overlay ---------- */
 .overlay{
     width:100%;
     height:100%;
@@ -22,6 +28,8 @@ body{
     justify-content:center;
     padding:20px;
 }
+
+/* ---------- twin box ---------- */
 .twin-box{
     display:flex;
     width:100%;
@@ -31,6 +39,8 @@ body{
     overflow:hidden;
     box-shadow:0 8px 30px rgba(0,0,0,.25);
 }
+
+/* ---------- left box & right box ---------- */
 .left-box, .right-box{
     flex:1;
     padding:50px 45px;
@@ -54,24 +64,28 @@ body{
     text-align: center;      /* center text multiline */
 }
 
+/* ---------- logo & teks ---------- */
 .nice {
     font-size: 17px;
     font-weight: 400;
     margin: 0 0 8px 0;
 }
 
+/* Gaya untuk teks "Welcome to" */
 .welcome {
     font-size: 39px;
     font-weight: 700;   /* bold */
     margin: 0 0 4px 0;
 }
 
+/* Gaya untuk teks "SLAB" */
 .slab {
     font-size: 39px;
     font-weight: 700;   /* bold */
     margin: 0;
 }
 
+/* ---------- logo image ---------- */
 .nice, .welcome, .slab {
     font-family: 'Poppins', sans-serif;
 }
@@ -90,11 +104,15 @@ body{
     text-align: center;  /* <-- center kan */
     margin-bottom: 8px;
 }
+
+/* ---------- form styles ---------- */
 .greet{
     font-size:1.05rem;
     color:#444;
     margin-bottom:4px;
 }
+
+/* ---------- sub greet ---------- */
 .sub-greet{
     font-size:.95rem;
     color:#666;
@@ -103,6 +121,8 @@ body{
     font-weight:600;
     color:#000;
 }
+
+/* ---------- form styles ---------- */
 .right-box form{
     display:flex;
     flex-direction:column;
@@ -120,6 +140,8 @@ body{
     border-color:#222;
     outline:none;
 }
+
+/* ---------- checkbox ---------- */
 .check{
     display:flex;
     align-items:center;
@@ -130,6 +152,8 @@ body{
 .check input{
     margin-right:8px;
 }
+
+/* ---------- button styles ---------- */
 button{
     width:100%;
     padding:14px;
@@ -145,6 +169,8 @@ button{
 button:hover{
     background:#333;
 }
+
+/* ---------- extra link ---------- */
 .extra{
     margin-top:22px;
     font-size:.85rem;

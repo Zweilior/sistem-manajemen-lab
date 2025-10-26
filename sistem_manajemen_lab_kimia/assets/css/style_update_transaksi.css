@@ -1,9 +1,11 @@
+/* === GLOBAL STYLES === */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* --- Body Styles --- */
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #86aadf; 
@@ -11,49 +13,68 @@ body {
     padding: 24px;
 }
 
-.main-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
+/* === CONTAINER STYLES === */
+.container {
+    width: 100%;
+    max-width: 800px; 
+    margin: 0 auto;
 }
 
+/* === HEADER STYLES === */
+.main-header {
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    gap: 30px;                
+    flex-wrap: wrap;        
+    margin-bottom: 24px;
+    padding: 15px 10px;      
+}
+
+/* Logo and Title */
 .logo {
     display: flex;
     align-items: center;
 }
 
+/* Logo image styles */
 .logo-img{
     width: 75px;
     height: auto;
     margin-right: 13px;
 }
 
+/* Icon logo styles */
 .logo-icon {
     font-size: 2.5rem; 
     margin-right: 15px;
 }
 
+/* Logo dan Judul */
 .logo h1 {
     font-size: 1.75rem;
     color: #1D3557; 
 }
 
+/* --- Navigasi --- */
 .main-header nav {
     font-size: 1rem;
     color: #1D3557;
 }
 
+/* Link navigasi */
 .main-header nav a {
     text-decoration: none;
     color: #1D3557;
     margin: 0 8px;
 }
 
+/* Link navigasi aktif */
 .main-header nav a.active {
     font-weight: 700; 
 }
 
+/* === CARD STYLES === */
 .card {
     background-color: #FFFFFF;
     border-radius: 12px;
@@ -61,6 +82,7 @@ body {
     margin-bottom: 24px;
 }
 
+/* === FILTER CARD STYLES === */
 .filter-card {
     display: flex;
     justify-content: space-between;
@@ -69,17 +91,20 @@ body {
     gap: 20px;
 }
 
+/* ---------- Form Styles ---------- */
 .form-group {
     display: flex;
     flex-direction: column;
 }
 
+/* Label styles */
 .form-group label {
     font-weight: 600;
     font-size: 0.9rem;
     margin-bottom: 8px;
 }
 
+/* ---------- Form Styles ---------- */
 .form-group input[type="text"],
 .form-group select {
     font-family: 'Poppins', sans-serif;
@@ -90,10 +115,12 @@ body {
     min-width: 250px;
 }
 
+/* ---------- Breadcrumb Styles ---------- */
 .form-group input::placeholder {
     color: #9CA3AF;
 }
 
+/* ---------- Breadcrumb Styles ---------- */
 .form-group select {
     appearance: none;
     -webkit-appearance: none;
@@ -104,6 +131,7 @@ body {
     background-size: 10px;
 }
 
+/* ---------- Button Styles ---------- */
 .btn {
     font-family: 'Poppins', sans-serif;
     padding: 10px 20px;
@@ -115,54 +143,64 @@ body {
     transition: background-color 0.2s ease;
 }
 
+/* Primary button styles */
 .btn-primary {
     background-color: #1D3557; 
     color: #FFFFFF;
 }
 
+/* Hover effect for primary button */
 .btn-primary:hover {
     background-color: #335b9b;
 }
 
-
+/* ---------- Table Styles ---------- */
 .table-card {
     padding: 0;
     overflow: hidden; 
 }
 
+/* Styles untuk tabel */
 table {
     width: 100%;
     border-collapse: collapse;
 }
 
+/* Sel tabel */
 th, td {
     padding: 16px;
     text-align: center;
     border-bottom: 1px solid #EEE; 
 }
 
+/* Header tabel */
 thead {
     background-color: #4C6AA6; 
     color: #FFFFFF;
 }
 
+/* Header sel tabel */
 thead th {
     font-weight: 600;
 }
 
+/* Hover effect for table rows */
 tbody tr:hover {
     background-color: #F9FAFB; 
 }
 
+/* Remove border for last row */
 tbody tr:last-child td {
     border-bottom: none; 
 }
 
+/* Isi sel tabel */
 tbody td {
     color: #555;
     font-size: 0.95rem;
 }
 
+/* Table footer */
 .table-footer {
     display: flex;
     justify-content: space-between;
@@ -172,16 +210,19 @@ tbody td {
     border-top: 1px solid #EEE;
 }
 
+/* Info data */
 .data-info {
     font-size: 0.9rem;
     color: #6B7280;
 }
 
+/* === PAGINATION STYLES === */
 .pagination {
     display: flex;
     gap: 8px;
 }
 
+/* Styles for pagination buttons */
 .pagination button {
     font-family: 'Poppins', sans-serif;
     width: 36px;
@@ -194,28 +235,36 @@ tbody td {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+/* Hover effect for pagination buttons */
 .pagination button:hover {
     background-color: #F3F4F6;
 }
 
+/* Active state for pagination buttons */
 .pagination button.active {
     background-color: #4C6AA6; 
     color: #FFFFFF;
     border-color: #4C6AA6;
 }
 
+/* Disabled state for pagination buttons */
 .pagination button:disabled {
     background-color: #F3F4F6;
     color: #B0B0B0;
     cursor: not-allowed;
 }
 
+/* ---------- Form Styles ---------- */
 .form-card {
     padding: 40px 24px; 
-    max-width: auto;   
-    margin: 0 auto;     
+    max-width: 700px;   
+    margin: 20px auto;  
+    border-radius: 16px; 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07); 
+    background-color: #FFFFFF; 
 }
 
+/* Form container */
 .form-container {
     max-width: 450px;   
     margin: 0 auto;     
@@ -224,12 +273,14 @@ tbody td {
     gap: 16px; 
 }
 
+/* Form group styles */
 .form-container .form-group {
     width: 100%;
     display: flex;
     flex-direction: column;
 }
 
+/* Label styles */
 .form-container .form-group label {
     font-weight: 600;
     font-size: 1rem;
@@ -237,6 +288,7 @@ tbody td {
     text-align: center; 
 }
 
+/* Input styles */
 .form-container .form-group input[type="text"] {
     font-family: 'Poppins', sans-serif;
     font-size: 0.95rem;
@@ -246,10 +298,12 @@ tbody td {
     width: 100%;
 }
 
+/* Placeholder styles */
 .form-container .form-group input::placeholder {
     color: #9CA3AF;
 }
 
+/* Form action buttons */
 .form-actions {
     display: flex;
     justify-content: center; 
@@ -257,11 +311,13 @@ tbody td {
     margin-top: 24px; 
 }
 
+/* Secondary button styles */
 .btn-secondary {
     background-color: #1D3557; 
     color: #FFFFFF;
 }
 
+/* Hover effect for secondary button */
 .btn-secondary:hover {
     background-color: #335b9b;
 }

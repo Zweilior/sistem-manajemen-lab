@@ -1,102 +1,136 @@
+/* === GLOBAL STYLES === */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+/* === BODY STYLES === */
 body {
-    /* Mengganti font-family agar lebih modern & bersih */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: url('../img/bg_main1.png') no-repeat center/cover fixed;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  background-color: #86AADF;
+  color: #1D3557;
+  padding: 24px;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 20px auto;
-}
 
+/* === HEADER STYLES === */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    padding: 0 10px; 
 }
 
+/* Bagian kiri header dengan ikon dan judul */
 .header-title {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 15px; 
 }
 
+/* Ikon lab pada header */
 .header-icon {
-    width: 50px;
+    width: 50px; 
     height: 50px;
 }
 
+/* Judul "EDIT KELOLA DATA" */
 .header-title h1 {
     font-size: 32px;
-    /* DIGANTI: Font lebih tebal (900) dan warna lebih gelap/tajam */
     color: #1E293B; 
-    font-weight: 900;
+    font-weight: 900; 
 }
 
-.main-header nav {
-    font-size: 1rem;
-    color: #1D3557;
+/* --- Breadcrumbs Styles --- */
+.breadcrumbs {
+    font-size: 16px; 
+    color: #0F172A;  
+    font-weight: 500; 
 }
 
-.main-header nav a {
-    text-decoration: none;
-    color: #1D3557;
-    margin: 0 8px;
+/* Breadcrumb links */
+.breadcrumbs a {
+    text-decoration: none; 
+    color: #0F172A;        
+    margin: 0 4px;
 }
 
-.main-header nav a.active {
-    font-weight: 700; /* Bold */
+/* Active breadcrumb link */
+.breadcrumbs a.active { 
+    font-weight: 700;    
+    color: #0F172A;        
 }
 
+/* === CARD STYLES === */
 .card {
     background-color: #FFFFFF;
-    border-radius: 16px;
+    border-radius: 16px; 
     padding: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     margin-bottom: 25px;
 }
 
+/* === FILTER STYLES === */
 .filter-card {
     display: flex;
-    justify-content: space-between;
     align-items: flex-end;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
-.form-group {
+/* Styles untuk setiap grup form dalam filter */
+.filter-card .form-group {
     display: flex;
     flex-direction: column;
+    flex-grow: 1; 
+    min-width: 200px;
 }
 
+/* Push tombol ke kanan */
+.filter-card .btn-primary { 
+    margin-left: auto; 
+    flex-shrink: 0;
+}
+
+/* === FORM STYLES === */
 .form-group label {
     font-size: 14px;
     font-weight: bold;
-    /* DIGANTI: Warna lebih gelap agar lebih tegas */
     color: #0F172A;
     margin-bottom: 8px;
 }
 
+/* Styles untuk input teks dan select */
 .form-group input[type="text"],
 .form-group select {
     padding: 10px 12px;
-    border: 1px solid #CBD5E1;
-    border-radius: 8px;
+    border: 1px solid #CBD5E1; 
+    border-radius: 8px; 
     font-size: 16px;
-    width: 300px;
+    width: 100%; 
+    font-family: inherit; 
 }
 
+/* Placeholder styles */
+.form-group input::placeholder {
+    color: #9CA3AF; 
+}
+
+/* Menambahkan panah dropdown pada select */
+.form-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236B7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-13%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2013l128%20128c3.6%203.6%207.8%205.4%2013%205.4s9.4-1.8%2013-5.4l128-128c3.6-3.6%205.4-7.8%205.4-13%200-5-1.8-9.4-5.4-13z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 10px;
+    padding-right: 35px;
+}
+
+/* === BUTTON STYLES === */
 .btn {
     text-decoration: none;
     border: none;
@@ -106,67 +140,85 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s;
+    white-space: nowrap;
+    font-family: inherit; 
 }
 
+/* Tombol primary */
 .btn-primary {
-    background-color: #0F172A;
+    background-color: #0F172A; 
     color: #FFFFFF;
 }
+
+/* Hover effect untuk tombol primary */
 .btn-primary:hover {
-    background-color: #334155;
+    background-color: #334155; 
 }
 
+/* Tombol edit */
 .btn-edit {
-    background-color: #86aadf;
+    background-color: #3B82F6; 
     color: #FFFFFF;
-    padding: 8px 16px;
+    padding: 8px 16px; 
     font-size: 14px;
 }
+
+/* Hover effect untuk tombol edit */
 .btn-edit:hover {
-    background-color: #86aadf;
+    background-color: #2563EB; 
 }
 
+/* Tombol hapus */
 .btn-delete {
-    background-color: #0F172A;
+    background-color: #0F172A; 
     color: #FFFFFF;
-    padding: 8px 16px;
+    padding: 8px 16px; 
     font-size: 14px;
 }
+
+/* Hover effect untuk tombol hapus */
 .btn-delete:hover {
-    background-color: #334155;
+    background-color: #334155; 
 }
 
+/* === TABLE STYLES === */
 .data-table {
     width: 100%;
     border-collapse: collapse;
+    border-spacing: 0;
 }
 
+/* Gaya untuk header dan sel tabel */
 .data-table th,
 .data-table td {
     padding: 14px 16px;
     text-align: left;
-    border-bottom: 1px solid #E2E8F0;
+    border-bottom: 1px solid #E2E8F0; 
 }
 
-.data-table th {
-    /* DIGANTI: Latar header tabel lebih gelap agar sesuai desain */
-    background-color: #86aadf;
-    color: #FFFFFF;
-    font-size: 14px;
-    /* DIGANTI: Memastikan teks jadi KAPITAL dan tebal */
-    text-transform: uppercase;
-    font-weight: 700;
-}
-
+/* Gaya untuk baris tabel */
 .data-table tbody tr:last-child td {
     border-bottom: none;
 }
 
+/* Gaya untuk sel aksi (edit/hapus) */
 .data-table td:last-child {
     display: flex;
     gap: 8px;
+    justify-content: flex-start;
 }
 
+/* Warna latar belakang untuk header tabel */
+.data-table th {
+    background-color: #86aadf;
+    color: #FFFFFF; 
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-bottom: 1px solid #6a94cc;
+}
+
+/* Warna teks untuk isi tabel */
 .table-footer {
     display: flex;
     justify-content: space-between;
@@ -178,62 +230,73 @@ body {
     color: #475569;
 }
 
+/* Styles untuk pagination */
 .pagination {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.page-arrow,
-.page-number {
-    text-decoration: none;
-    padding: 8px 12px;
-    border: 1px solid #CBD5E1;
-    border-radius: 6px;
-    color: #334155;
+/* Styles untuk tombol pagination */
+.pagination .page-arrow,
+.pagination .page-number {
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  border-radius: 6px;
+  border: 1px solid #9CA3AF;
+  background-color: white;
+  color: #86AADF; 
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-.page-arrow:hover,
-.page-number:hover {
-    background-color: #F1F5F9;
+/* Cursor pointer for arrows */
+.pagination .page-arrow {
+  cursor: pointer;
 }
 
-.page-number.active {
-    /* DIGANTI: Paginasi aktif disamakan dengan header tabel */
-    background-color: #86aadf;
-    color: #FFFFFF;
-    border-color: #86aadf;
+/* Active page number */
+.pagination .page-number.active {
+  background-color: #86AADF; 
+  color: white;
+  border-color: #86AADF;
+  cursor: default;
 }
 
-.page-arrow.disabled {
-    color: #CBD5E1;
-    cursor: not-allowed;
+/* Hover effect for page numbers */
+.pagination .page-arrow:not(.disabled):hover {
+  background-color: #E5E7EB; 
+  color: #1D3557; 
 }
 
-/* === CSS TAMBAHAN UNTUK MODAL HAPUS === */
-
-/* Rule ini dipindahkan dari <style> di index.php */
-.filter-card .btn-primary { 
-    margin-left: auto; 
-    align-self: flex-end; 
+/*=== DISABLED STATE FOR PAGINATION === */
+.pagination .page-arrow.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: #9CA3AF; 
+  background-color: white;
+  pointer-events: none;
 }
 
+/* === MODAL STYLES === */
 .modal-overlay {
-    display: none; /* Defaultnya tersembunyi */
-    position: fixed; /* Tetap di layar */
-    z-index: 1000; /* Di atas segalanya */
+    display: none;
+    position: fixed;
+    z-index: 1000;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Latar belakang gelap transparan */
-    
-    /* Posisikan konten di tengah */
-    display: flex; /* Diubah oleh JS nanti */
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex; 
     justify-content: center;
     align-items: center;
 }
 
+/* Menampilkan overlay modal */
 .modal-content {
     background-color: #fff;
     padding: 24px;
@@ -242,8 +305,6 @@ body {
     text-align: center;
     width: 90%;
     max-width: 400px;
-    
-    /* Animasi sederhana */
     transform: scale(0.9);
     opacity: 0;
     animation: modalFadeIn 0.2s forwards;
@@ -257,7 +318,7 @@ body {
     }
 }
 
-
+/* Gaya untuk judul dalam modal */
 .modal-content h4 {
     font-size: 20px;
     font-weight: bold;
@@ -266,20 +327,22 @@ body {
     margin-bottom: 10px;
 }
 
+/* Gaya untuk paragraf dalam modal */
 .modal-content p {
     font-size: 16px;
     color: #475569;
     margin-bottom: 25px;
 }
 
+/* Gaya untuk tombol dalam modal */
 .modal-buttons {
     display: flex;
     justify-content: center;
     gap: 15px;
 }
 
-/* Styling tombol modal agar konsisten */
-.modal-buttons .btn {
+/* Gaya umum untuk tombol dalam modal */
+.modal-buttons .btn { 
     text-decoration: none;
     border: none;
     border-radius: 8px;
@@ -289,22 +352,24 @@ body {
     cursor: pointer;
 }
 
-/* Tombol OK (Hapus) */
+/* Gaya untuk tombol hapus */
 .modal-buttons .btn-delete {
-    background-color: #07244b; /* Warna tombol Hapus */
+    background-color: #0F172A; 
     color: #FFFFFF;
 }
+
+/* Hover effect untuk tombol hapus */
 .modal-buttons .btn-delete:hover {
     background-color: #334155;
 }
 
-/* Tombol Cancel */
+/* Gaya untuk tombol sekunder */
 .modal-buttons .btn-secondary {
-    background-color: #E2E8F0; /* Warna abu-abu muda */
-    color: #334155;
-}
-.modal-buttons .btn-secondary:hover {
-    background-color: #CBD5E1;
+    background-color: #E2E8F0; 
+    color: #334155; 
 }
 
-/* === AKHIR CSS MODAL === */
+/* Hover effect untuk tombol sekunder */
+.modal-buttons .btn-secondary:hover {
+    background-color: #CBD5E1; 
+}

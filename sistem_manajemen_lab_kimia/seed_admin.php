@@ -1,9 +1,9 @@
 <?php
-require 'config/koneksi.php';   // pastikan $pdo ada
+require 'config/koneksi.php';                           // pastikan $pdo ada
 
 $username = 'admin';
 $plainPass = 'rahasia';
-$hash = password_hash($plainPass, PASSWORD_DEFAULT);
+$hash = password_hash($plainPass, PASSWORD_DEFAULT);    // buat hash password
 
 // hapus user lama (opsional)
 $pdo->prepare("DELETE FROM admin WHERE username = ?")->execute([$username]);

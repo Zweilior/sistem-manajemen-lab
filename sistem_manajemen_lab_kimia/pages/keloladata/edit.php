@@ -1,94 +1,103 @@
 <?php
-session_start();
+session_start();                                               // Memulai session untuk mengakses data session                                  
 if (!isset($_SESSION['admin'])) {
-    header('Location: ../../index.php');
+    header('Location: ../../index.php'); 
     exit;
 }
-// Lokasi file: barang/edit.php
-require '../../config/koneksi.php'; // <-- SUDAH BENAR: Menggunakan koneksi PDO
+require '../../config/koneksi.php';                           // Menyertakan file koneksi database              
 
-$item = null;
-$error = '';
-$id_item_to_edit = null;
+$item = null;                                                 // Inisialisasi variabel untuk menyimpan data item
+$error = '';                                                  // Inisialisasi variabel untuk menyimpan pesan error                 
+$id_item_to_edit = null;                                      // Inisialisasi variabel untuk menyimpan ID item yang akan diedit
 
-// --- 1. LOGIKA PROSES UPDATE (POST) ---
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_data'])) {
-    
-    // Ambil semua data dari form
-    $id_item = (int)$_POST['id_item'];
-    $nama_item = $_POST['nama_item'];
-    $id_kategori = (int)$_POST['id_kategori'];
-    $satuan = $_POST['satuan'];
-    $jumlah = (int)$_POST['jumlah'];
+                                                              // Proses form saat metode POST
 
-    // SUDAH BENAR: Menggunakan PDO Transaction
-    $pdo->beginTransaction();
-    try {
-        // STEP 1: Update tabel item_alat_bahan
-        // SUDAH BENAR: Query aman dengan placeholder (?)
-        $sql1 = "UPDATE item_alat_bahan 
-                 SET nama_item = ?, id_kategori = ?, satuan = ? 
-                 WHERE id_item = ?";
-        $stmt1 = $pdo->prepare($sql1);
-        // SUDAH BENAR: Execute dengan parameter terpisah
-        $stmt1->execute([$nama_item, $id_kategori, $satuan, $id_item]);
+if ($_SERVER["REQUEST_METHOD"] == "POST") { 
 
-        // STEP 2: Update tabel stok_lab
-        $sql2 = "UPDATE stok_lab SET jumlah = ?, tanggal_update = NOW() WHERE id_item = ?";
-        $stmt2 = $pdo->prepare($sql2);
-        $stmt2->execute([$jumlah, $id_item]);
-        
-        // (Opsional) Anda bisa menambah record di transaksi_stok
-        // ... (tapi untuk edit, mungkin tidak perlu, kecuali jumlahnya berubah) ...
+    if(isset($_POST['update_data'])) {                        // Jika form update data disubmit                    
 
-        // SUDAH BENAR: Commit transaksi
-        $pdo->commit();
+        $id_item = isset($_POST['id_item']) ? (int)$_POST['id_item'] : 0; 
+        $nama_item = isset($_POST['nama_item']) ? trim($_POST['nama_item']) : '';
+        $id_kategori = isset($_POST['id_kategori']) ? (int)$_POST['id_kategori'] : 0;
+        $satuan = isset($_POST['satuan']) ? trim($_POST['satuan']) : '';
+        $jumlah = isset($_POST['jumlah']) ? (int)$_POST['jumlah'] : 0;
 
-        // Redirect ke halaman utama
-        header("Location: index.php?status=update_sukses");
-        exit;
+        if ($id_item <= 0 || empty($nama_item) || $id_kategori <= 0 || empty($satuan) || $jumlah < 0) {    // Validasi input dasar
+            $error = "Semua field harus diisi dengan benar.";
+            $id_item_to_edit = $id_item;
+        } else {                                            // Jika validasi lolos, lanjutkan update data
+            $pdo->beginTransaction();
+            try {                                           // Update data di tabel item_alat_bahan dan stok_lab
+                $sql1 = "UPDATE item_alat_bahan
+                         SET nama_item = ?, id_kategori = ?, satuan = ?
+                         WHERE id_item = ?";
+                $stmt1 = $pdo->prepare($sql1);
+                $stmt1->execute([$nama_item, $id_kategori, $satuan, $id_item]);
 
-    } catch (PDOException $e) {
-        // SUDAH BENAR: Rollback jika gagal
-        $pdo->rollBack();
-        $error = "Gagal mengupdate data: " . $e->getMessage();
+                $sql2 = "UPDATE stok_lab SET jumlah = ?, tanggal_update = NOW() WHERE id_item = ?";     // Perbarui jumlah di tabel stok_lab
+                $stmt2 = $pdo->prepare($sql2);
+                $stmt2->execute([$jumlah, $id_item]);
+
+                $pdo->commit();
+
+                header("Location: ../keloladata/index.php?status=update_sukses"); 
+                exit;
+
+            } catch (PDOException $e) {                                                                 // Jika ada error, rollback transaksi
+                $pdo->rollBack();
+                $error = "Gagal mengupdate data: " . $e->getMessage();
+                $id_item_to_edit = $id_item;
+            }
+        }
+    } else {
     }
 }
-
-// --- 2. LOGIKA AMBIL DATA UNTUK FORM (GET) ---
-if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
-    $id_item_to_edit = (int)$_GET['id'];
-    
-    // Query untuk mengambil data item + stoknya
-    // SUDAH BENAR: Query aman dengan placeholder (?)
-    $sql_get = "SELECT i.id_item, i.nama_item, i.id_kategori, i.satuan, s.jumlah 
+                                                                        // Jika ID item untuk diedit belum ditetapkan dari POST, ambil dari GET
+if ($id_item_to_edit === null && isset($_GET['id'])) { 
+     $id_item_to_edit = (int)$_GET['id'];
+}
+                                                                        // Ambil data item yang akan diedit jika ID valid
+if ($id_item_to_edit !== null && $id_item_to_edit > 0) {
+    $sql_get = "SELECT i.id_item, i.nama_item, i.id_kategori, i.satuan, s.jumlah
                 FROM item_alat_bahan i
                 LEFT JOIN stok_lab s ON i.id_item = s.id_item
                 WHERE i.id_item = ?";
-    
-    // SUDAH BENAR: Prepare dan execute
+
+                                                                        // Ambil data item yang akan diedit
     $stmt_get = $pdo->prepare($sql_get);
     $stmt_get->execute([$id_item_to_edit]);
-    // SUDAH BENAR: Fetch data
     $item = $stmt_get->fetch(PDO::FETCH_ASSOC);
 
-    if (!$item) {
+    if (!$item && empty($error)) {                                      // Jika item tidak ditemukan
         $error = "Data item tidak ditemukan.";
-        $item = null; // Pastikan item null jika tidak ketemu
     }
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($error) && $id_item_to_edit > 0) {       // Jika ada error saat POST, pertahankan input user
+         $item['nama_item'] = $_POST['nama_item'] ?? $item['nama_item']; 
+         $item['id_kategori'] = $_POST['id_kategori'] ?? $item['id_kategori'];
+         $item['satuan'] = $_POST['satuan'] ?? $item['satuan'];
+         $item['jumlah'] = $_POST['jumlah'] ?? $item['jumlah'];
+    }
+
+                                                                        // Jika ID item tidak valid
+} elseif (empty($error) && $_SERVER["REQUEST_METHOD"] != "POST") { 
+     $error = "ID Item tidak valid atau tidak disediakan.";
 }
 
-// Ambil semua kategori untuk dropdown
-// SUDAH BENAR: Menggunakan PDO query
-$sql_kategori = "SELECT id_kategori, nama_kategori FROM kategori_item ORDER BY nama_kategori ASC";
-$stmt_kategori = $pdo->query($sql_kategori);
-$semua_kategori = $stmt_kategori->fetchAll(PDO::FETCH_ASSOC);
 
-$pdo = null; // Tutup koneksi
+try {                                                                   // Ambil semua kategori untuk dropdown
+    $sql_kategori = "SELECT id_kategori, nama_kategori FROM kategori_item ORDER BY nama_kategori ASC";
+    $stmt_kategori = $pdo->query($sql_kategori);
+    $semua_kategori = $stmt_kategori->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {                                             // Menangkap error jika query gagal
+    $semua_kategori = []; 
+    $error .= " Gagal mengambil daftar kategori."; 
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="id">
-<head>
+<head>                                                                              <!-- Header HTML umum -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Data Barang</title>
@@ -96,93 +105,91 @@ $pdo = null; // Tutup koneksi
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="../../assets/css/edit_keloladata.css">
+    <link rel="stylesheet" href="../../assets/css/edit_keloladata.css">             <!-- Link file CSS khusus halaman edit kelola data -->
 </head>
 <body>
 
-<div class="container">
-
+<div class="container">                                                             <!-- Kontainer utama halaman -->                         
     <header class="header">
         <div class="header-title">
             <img src="../../assets/img/ikon.png" alt="Logo" class="header-icon">
             <h1>KELOLA DATA</h1>
         </div>
-        <nav>
+        <nav class="breadcrumbs">                                                   <!-- Navigasi breadcrumb -->
             <a href="../keloladata/index.php">Kembali</a> |
             <a href="#" class="active">Update Kelola Data</a>
         </nav>
     </header>
 
     <main>
-        <section class="card">
-            
-            <?php if ($error): ?>
-                <div class="alert-error" style="color: red; text-align: center; margin-bottom: 15px;">
-                    <?= htmlspecialchars($error) ?>
-                </div>
-            <?php endif; ?>
+        <section class="card form-card"> <?php if (!empty($error)): ?>             <!-- Tampilkan pesan error jika ada -->                  
+            <div class="alert-error" style="color: red; text-align: center; margin-bottom: 15px; background-color: #ffebee; border: 1px solid #ef9a9a; padding: 10px; border-radius: 8px;">
+                <?= htmlspecialchars($error) ?>
+            </div>
+            <?php endif; ?>                                     
 
-            <?php if ($item): ?>
-                
-                <form class="form-container" action="edit.php" method="POST">
-                    
+            <?php if ($item): ?>                                                    <!-- Jika data item ditemukan, tampilkan form edit -->           
+
+                <form class="form-container" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . $id_item_to_edit; ?>" method="POST">
+
                     <input type="hidden" name="id_item" value="<?= $item['id_item'] ?>">
-                    
-                    <div class="form-group">
+
+                    <div class="form-group">                                        <!-- Grup input untuk nama barang -->                      
                         <label for="nama-item">Nama Barang:</label>
-                        <input type="text" id="nama-item" name="nama_item" 
-                               value="<?= htmlspecialchars($item['nama_item']) ?>" 
+                        <input type="text" id="nama-item" name="nama_item"
+                               value="<?= htmlspecialchars($item['nama_item'] ?? '') ?>"
                                placeholder="Masukkan nama barang..." required>
                     </div>
-                    
-                    <div class="form-group">
+
+                    <div class="form-group">                                        <!-- Grup input untuk kategori -->                  
                         <label for="kategori">Kategori:</label>
                         <select id="kategori" name="id_kategori" required>
-                            <?php foreach ($semua_kategori as $kat): ?>
-                                <option value="<?= $kat['id_kategori'] ?>" 
-                                    <?= ($kat['id_kategori'] == $item['id_kategori']) ? 'selected' : '' ?>>
+                            <option value="" disabled>-- Pilih Kategori --</option> <?php foreach ($semua_kategori as $kat): ?>
+                                <option value="<?= $kat['id_kategori'] ?>"
+                                    <?= (isset($item['id_kategori']) && $kat['id_kategori'] == $item['id_kategori']) ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($kat['nama_kategori']) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    
-                    <div class="form-group">
+
+                    <div class="form-group">                                        <!-- Grup input untuk satuan -->
                         <label for="satuan">Satuan:</label>
-                        <input type="text" id="satuan" name="satuan" 
-                               value="<?= htmlspecialchars($item['satuan']) ?>" 
+                        <input type="text" id="satuan" name="satuan"
+                               value="<?= htmlspecialchars($item['satuan'] ?? '') ?>"
                                placeholder="Masukkan Satuan Barang" required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group">                                        <!-- Grup input untuk jumlah -->
                         <label for="jumlah">Jumlah:</label>
-                        <input type="number" id="jumlah" name="jumlah" 
-                               value="<?= htmlspecialchars($item['jumlah']) ?>" 
+                        <input type="number" id="jumlah" name="jumlah"
+                               value="<?= htmlspecialchars($item['jumlah'] ?? '0') ?>"
                                placeholder="Masukkan dalam bentuk angka" required min="0">
                     </div>
 
-                    <div class="button-group">
-                        <button type="submit" name="update_data" class="btn">
+                    <div class="button-group">                                      <!-- Grup tombol aksi -->                          
+                        <button type="submit" name="update_data" class="btn btn-primary">
                             Update Data
                         </button>
-                        <a href="index.php" class="btn">
+                        <a href="../keloladata/index.php" class="btn btn-secondary">
                             Lihat Data
                         </a>
-                        <a href="index.php" class="btn">
-                            batal
+                        <a href="../keloladata/index.php" class="btn btn-secondary">
+                            Batal
                         </a>
                     </div>
                 </form>
 
-            <?php else: ?>
-                <p style="text-align: center;">Data item tidak ditemukan atau ID tidak valid.</p>
-                <div class="button-group">
-                    <a href="../index.php" class="btn">Kembali ke Beranda</a>
-                </div>
+            <?php elseif(empty($error)): ?>                                         <!-- Jika item tidak ditemukan dan tidak ada error lain -->
+                 <p style="text-align: center;">Tidak dapat memuat data item.</p>
+                 <div class="button-group">
+                     <a href="../keloladata/index.php" class="btn">Kembali</a>
+                 </div>
             <?php endif; ?>
 
         </section>
     </main>
 
-</div> </body>
+</div>
+</body>
 </html>

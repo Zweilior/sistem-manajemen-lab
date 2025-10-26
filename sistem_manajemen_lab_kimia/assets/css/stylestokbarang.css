@@ -1,9 +1,11 @@
+/* === GLOBAL STYLES === */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* --- Body Styles --- */
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #86AADF;
@@ -11,7 +13,7 @@ body {
   padding: 24px;
 }
 
-/* === HEADER === */
+/* === HEADER STYLES === */
 .main-header {
   display: flex;
   justify-content: space-between;
@@ -19,34 +21,39 @@ body {
   margin-bottom: 24px;
 }
 
+/* Logo and Title */
 .logo {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
+/* Logo image styles */
 .logo-img {
   width: 80px;
   height: auto;
 }
 
+/* Logo dan Judul */
 .logo h1 {
   font-size: 2rem;
   color: #1D3557;
   font-weight: 700;
 }
 
+/* --- Navigasi --- */
 .main-header nav a {
   text-decoration: none;
   color: #1D3557;
   font-size: 1rem;
 }
 
+/* Link navigasi aktif */
 .main-header nav a.active {
   font-weight: 700;
 }
 
-/* === CARD === */
+/* === CARD STYLES === */
 .card {
   background-color: #fff;
   border-radius: 12px;
@@ -55,24 +62,27 @@ body {
   padding: 24px;
 }
 
-/* === FILTER === */
+/* === FILTER CARD STYLES === */
 .filter-card {
   display: flex;
-  justify-content: flex-start; /* ubah dari space-between */
+  justify-content: flex-start; 
   align-items: flex-end;
-  gap: 350px; /* atur jarak antar form */
+  gap: 350px; 
 }
 
+/* === FORM STYLES === */
 .form-group {
   display: flex;
   flex-direction: column;
 }
 
+/* Label Styles */
 .form-group label {
   font-weight: 600;
   margin-bottom: 8px;
 }
 
+/* Label Styles */
 .form-group input,
 .form-group select {
   font-family: 'Poppins', sans-serif;
@@ -82,11 +92,12 @@ body {
   min-width: 250px;
 }
 
+/* Placeholder styles */
 .form-group input::placeholder {
   color: #9CA3AF;
 }
 
-/* === TABLE === */
+/* === TABLE STYLES === */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -109,6 +120,7 @@ tbody td {
   color: #555;
 }
 
+/* === TABLE FOOTER STYLES === */
 .table-footer {
   display: flex;
   justify-content: space-between;
@@ -116,38 +128,55 @@ tbody td {
   margin-top: 16px;
 }
 
+/* === DATA INFO STYLES === */
 .data-info {
   font-size: 0.9rem;
   color: #6B7280;
 }
 
+/* === PAGINATION STYLES === */
 .pagination {
-  display: flex;
-  gap: 8px;
+  display: flex; 
+  align-items: center; 
+  gap: 5px; 
 }
 
-.pagination button {
+/* Styles for pagination buttons */
+.pagination .page-arrow,
+.pagination .page-number {
+  display: inline-block; 
   width: 36px;
   height: 36px;
+  line-height: 36px; 
+  text-align: center; 
   border-radius: 6px;
   border: 1px solid #9CA3AF;
   background-color: white;
-  color: #86AADF;
+  color: #86AADF; 
   cursor: pointer;
-  transition: 0.2s;
+  text-decoration: none; 
+  transition: background-color 0.2s, color 0.2s; 
 }
 
-.pagination button.active {
-  background-color: #86AADF;
-  color: white;
+/* Active page number */
+.pagination .page-number.active {
+  background-color: #86AADF; 
+  color: white; 
+  border-color: #86AADF; 
+  cursor: default; 
 }
 
-.pagination button:hover:not(:disabled):not(.active) {
-  background-color: #E5E7EB;
-  color: #1D3557;
+/* Hover effect for page numbers */
+.pagination .page-arrow:not(.disabled):hover,
+.pagination .page-number:not(.active):hover {
+  background-color: #E5E7EB; 
+  color: #1D3557; 
 }
 
-.pagination button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+/*=== DISABLED STATE FOR PAGINATION === */
+.pagination .page-arrow.disabled {
+  opacity: 0.5; 
+  cursor: not-allowed; 
+  color: #9CA3AF; 
+  background-color: white; 
 }

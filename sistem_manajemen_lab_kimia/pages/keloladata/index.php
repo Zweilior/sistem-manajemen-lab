@@ -1,88 +1,130 @@
 <?php
-// --- AWAL BLOK LOGIKA (SEMUA SUDAH PDO) ---
+include __DIR__ . '/../../config/koneksi.php';                                 // Sertakan file koneksi PDO ($pdo)
 
-// 1. Sertakan koneksi PDO
-include __DIR__ . '/../../config/koneksi.php'; // $pdo akan dibuat di sini
-
-try {
-    // 2. LOGIKA CREATE (TAMBAH DATA)
+try {                                                                          // TAMBAH DATA BARANG
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create') {
-        
-        $pdo->beginTransaction(); 
 
-        $query1 = "INSERT INTO item_alat_bahan (nama_item, id_kategori, satuan) VALUES (?, ?, ?)";
-        $stmt1 = $pdo->prepare($query1);
-        $stmt1->execute([
-            $_POST['nama_item'], 
-            $_POST['id_kategori'], 
-            $_POST['satuan']
-        ]);
-        
-        $new_id_item = $pdo->lastInsertId(); 
+        $nama_item   = trim($_POST['nama_item']);
+        $id_kategori = (int)$_POST['id_kategori'];
+        $satuan      = trim($_POST['satuan']);
+        $jumlah_tambah = (int)$_POST['jumlah']; 
+                                                                                // VALIDASI INPUT
+        if (empty($nama_item) || $id_kategori <= 0 || empty($satuan) || $jumlah_tambah <= 0) {
+            die("Error: Semua field harus diisi dengan benar."); 
+        }
 
-        $query2 = "INSERT INTO stok_lab (id_item, jumlah, kondisi, tanggal_update) VALUES (?, ?, 'Baik', NOW())";
-        $stmt2 = $pdo->prepare($query2);
-        $stmt2->execute([
-            $new_id_item, 
-            $_POST['jumlah']
-        ]);
 
-        $new_id_stok = $pdo->lastInsertId(); 
-
-        $query3 = "INSERT INTO transaksi_stok (id_stok, jenis_transaksi, jumlah, tanggal_transaksi, keterangan)
-                   VALUES (?, 'Masuk', ?, NOW(), 'Pengadaan awal')";
-        $stmt3 = $pdo->prepare($query3);
-        $stmt3->execute([
-            $new_id_stok, 
-            $_POST['jumlah']
-        ]);
-
-        $pdo->commit(); 
-        header('Location: index.php'); 
-        exit;
-    }
-
-    // 3. LOGIKA UPDATE (EDIT DATA)
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update') {
-        
         $pdo->beginTransaction();
+        try {                                                                  // CEK APAKAH ITEM SUDAH ADA
 
+            $stmt_check = $pdo->prepare("SELECT id_item FROM item_alat_bahan WHERE nama_item = ?");
+            $stmt_check->execute([$nama_item]);
+            $existing_item = $stmt_check->fetch(PDO::FETCH_ASSOC);
+
+            $id_item = null;
+            $id_stok = null;
+
+            if ($existing_item) {                                               // ITEM SUDAH ADA, UPDATE STOK NYA SAJA
+                $id_item = $existing_item['id_item'];
+
+                $stmt_stok = $pdo->prepare("SELECT id_stok, jumlah FROM stok_lab WHERE id_item = ?");
+                $stmt_stok->execute([$id_item]);
+                $stok_info = $stmt_stok->fetch(PDO::FETCH_ASSOC);
+
+                if ($stok_info) {                                               // Jika stok sudah ada, UPDATE jumlahnya
+                    $id_stok = $stok_info['id_stok'];
+                    $jumlah_baru = $stok_info['jumlah'] + $jumlah_tambah; 
+
+                    $query_update_stok = "UPDATE stok_lab SET jumlah = ?, tanggal_update = NOW() WHERE id_item = ?";
+                    $stmt_update_stok = $pdo->prepare($query_update_stok);
+                    $stmt_update_stok->execute([$jumlah_baru, $id_item]);
+                } else {                                                        // Jika stok belum ada, INSERT baru                         
+                    $query_insert_stok = "INSERT INTO stok_lab (id_item, jumlah, kondisi, tanggal_update) VALUES (?, ?, 'Baik', NOW())";
+                    $stmt_insert_stok = $pdo->prepare($query_insert_stok);
+                    $stmt_insert_stok->execute([$id_item, $jumlah_tambah]);
+                    $id_stok = $pdo->lastInsertId(); 
+                }
+
+            } else {                                                            // INSERT ITEM BARU
+                $query1 = "INSERT INTO item_alat_bahan (nama_item, id_kategori, satuan) VALUES (?, ?, ?)";
+                $stmt1 = $pdo->prepare($query1);
+                $stmt1->execute([$nama_item, $id_kategori, $satuan]);
+                $id_item = $pdo->lastInsertId(); 
+
+                $query2 = "INSERT INTO stok_lab (id_item, jumlah, kondisi, tanggal_update) VALUES (?, ?, 'Baik', NOW())";
+                $stmt2 = $pdo->prepare($query2);
+                $stmt2->execute([$id_item, $jumlah_tambah]); 
+                $id_stok = $pdo->lastInsertId(); 
+            }
+                                                                                // CATAT TRANSAKSI PENAMBAHAN STOK
+            if ($id_stok !== null) { 
+                 $query3 = "INSERT INTO transaksi_stok (id_stok, jenis_transaksi, jumlah, tanggal_transaksi, keterangan)
+                             VALUES (?, 'Masuk', ?, NOW(), 'Penambahan Stok')"; 
+                 $stmt3 = $pdo->prepare($query3);
+                 $stmt3->execute([
+                     $id_stok,
+                     $jumlah_tambah 
+                 ]);
+            } else {                                                            // Jika id_stok masih null, lempar error
+                 throw new Exception("Gagal mendapatkan ID Stok untuk transaksi.");
+            }
+
+
+            $pdo->commit();
+            header('Location: index.php?status=tambah_sukses'); 
+            exit;
+                                                                                // Tangkap error jika ada masalah selama proses transaksi
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+            header('Location: add.php?error=' . urlencode($e->getMessage()));
+            exit;
+        } catch (Exception $ex) { 
+             $pdo->rollBack();
+             header('Location: add.php?error=' . urlencode($ex->getMessage()));
+             exit;
+        }
+
+    } 
+                                                                                // UPDATE DATA BARANG
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update') {
+
+        $pdo->beginTransaction();
+                                                                                // UPDATE ITEM ALAT & BAHAN
         $query1 = "UPDATE item_alat_bahan SET nama_item = ?, id_kategori = ?, satuan = ? WHERE id_item = ?";
         $stmt1 = $pdo->prepare($query1);
         $stmt1->execute([
-            $_POST['nama_item'], 
-            $_POST['id_kategori'], 
-            $_POST['satuan'], 
+            $_POST['nama_item'],
+            $_POST['id_kategori'],
+            $_POST['satuan'],
             $_POST['id_item']
         ]);
-        
+                                                                                // UPDATE STOK LAB
         $query2 = "UPDATE stok_lab SET jumlah = ?, tanggal_update = NOW() WHERE id_item = ?";
         $stmt2 = $pdo->prepare($query2);
         $stmt2->execute([
-            $_POST['jumlah'], 
+            $_POST['jumlah'],
             $_POST['id_item']
         ]);
-
+                                                                                // COMMIT TRANSAKSI & REDIRECT
         $pdo->commit();
         header('Location: index.php');
         exit;
     }
-
-    // 4. LOGIKA DELETE (HAPUS DATA)
+                                                                                //  HAPUS DATA BARANG
     if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
         $id_item = (int)$_GET['id'];
-        
+
         $pdo->beginTransaction();
 
         $stmtStok = $pdo->prepare("SELECT id_stok FROM stok_lab WHERE id_item = ?");
         $stmtStok->execute([$id_item]);
         $stok_data = $stmtStok->fetch();
 
-        if ($stok_data) {
+        if ($stok_data) {                                                       // Hapus riwayat transaksi stok terkait
             $id_stok = $stok_data['id_stok'];
             $pdo->prepare("DELETE FROM transaksi_stok WHERE id_stok = ?")->execute([$id_stok]);
         }
-        
+
         $pdo->prepare("DELETE FROM stok_lab WHERE id_item = ?")->execute([$id_item]);
         $pdo->prepare("DELETE FROM item_alat_bahan WHERE id_item = ?")->execute([$id_item]);
 
@@ -90,73 +132,81 @@ try {
         header('Location: index.php');
         exit;
     }
-
+                                                                                // Jika bukan aksi yang dikenali, redirect ke halaman utama kelola data
 } catch (PDOException $e) {
     if ($pdo->inTransaction()) {
-        $pdo->rollBack(); 
+        $pdo->rollBack();
     }
-    die("Database error: " . $e->getMessage());
+    die("Database error: " . $e->getMessage() . " (Code: " . $e->getCode() . ")");
 }
 
+                                                                                // PAGINATION & FILTERING LOGIC
+$jumlah_data_per_halaman = 3;
 
-// --- AWAL LOGIKA PAGINATION (PDO) ---
-
-$jumlah_data_per_halaman = 3; 
-
-$sql_where = "";
+$sql_where = ""; 
 $join_clause = " LEFT JOIN kategori_item k ON iab.id_kategori = k.id_kategori
-                 LEFT JOIN stok_lab s ON iab.id_item = s.id_item "; 
-$params_url = []; 
+                 LEFT JOIN stok_lab s ON iab.id_item = s.id_item ";
+$params_url = [];
 $params_sql = []; 
-
+                                                                                // Tambahkan filter pencarian jika ada
 if (!empty($_GET['search'])) {
     $search = $_GET['search'];
-    $sql_where .= " WHERE (iab.id_item LIKE ? OR iab.nama_item LIKE ?) ";
-    $params_sql[] = "%$search%";
-    $params_sql[] = "%$search%";
-    $params_url[] = "search=" . urlencode($search);
+    $sql_where .= " WHERE (iab.id_item LIKE :search_id OR iab.nama_item LIKE :search_nama) ";
+    $params_sql[':search_id'] = "%$search%";
+    $params_sql[':search_nama'] = "%$search%";
+    $params_url['search'] = $search;
 }
-
-if (!empty($_GET['kategori']) && $_GET['kategori'] != 'semua') { 
+                                                                                // Tambahkan filter kategori jika dipilih
+if (!empty($_GET['kategori']) && $_GET['kategori'] != 'semua') {
     $kategori_id = (int)$_GET['kategori'];
     $sql_where .= ($sql_where == "") ? " WHERE " : " AND ";
-    $sql_where .= " iab.id_kategori = ? "; 
-    $params_sql[] = $kategori_id;
-    $params_url[] = "kategori=$kategori_id";
+    $sql_where .= " iab.id_kategori = :kategori_id ";
+    $params_sql[':kategori_id'] = $kategori_id; 
+    $params_url['kategori'] = $kategori_id; 
 }
 
-$query_string = implode("&", $params_url);
+                                                                                // Membangun query string untuk pagination
+$query_string = http_build_query($params_url);
 $link_prefix = $query_string ? "?$query_string&" : "?";
-
+                                                                                // Query untuk menghitung total data kelola dengan filter
 $stmt_total = $pdo->prepare("SELECT COUNT(*) as total FROM item_alat_bahan iab $join_clause $sql_where");
-$stmt_total->execute($params_sql);
+$stmt_total->execute($params_sql); 
 $total_data = $stmt_total->fetchColumn();
-
+                                                                                // Hitung total halaman
 $total_halaman = ceil($total_data / $jumlah_data_per_halaman);
-if ($total_halaman < 1) $total_halaman = 1; 
-
+if ($total_halaman < 1) $total_halaman = 1;
+                                                                                // Tentukan halaman aktif
 $halaman_aktif = (isset($_GET['halaman'])) ? (int)$_GET['halaman'] : 1;
 if ($halaman_aktif < 1) $halaman_aktif = 1;
 if ($halaman_aktif > $total_halaman) $halaman_aktif = $total_halaman;
 
 $data_awal = ($halaman_aktif - 1) * $jumlah_data_per_halaman;
+                                                                                // Query utama untuk mengambil data kelola dengan filter dan pagination
+$sql_data = "SELECT iab.id_item, iab.nama_item, iab.satuan, k.nama_kategori, s.jumlah
+             FROM item_alat_bahan iab
+             $join_clause
+             $sql_where
+             ORDER BY iab.nama_item ASC
+             LIMIT :limit OFFSET :offset"; 
 
-$sql_data = "SELECT iab.id_item, iab.nama_item, iab.satuan, k.nama_kategori, s.jumlah 
-             FROM item_alat_bahan iab 
-             $join_clause 
-             $sql_where 
-             ORDER BY iab.id_item ASC 
-             LIMIT $data_awal, $jumlah_data_per_halaman";
-             
 $stmt_data = $pdo->prepare($sql_data);
-$stmt_data->execute($params_sql);
+                                                                                // Bind parameter filter (jika ada)
+foreach ($params_sql as $key => $value) {
+    $stmt_data->bindValue($key, $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+}
+                                                                                // Bind parameter LIMIT dan OFFSET
+$stmt_data->bindValue(':limit', $jumlah_data_per_halaman, PDO::PARAM_INT);
+$stmt_data->bindValue(':offset', $data_awal, PDO::PARAM_INT);
 
-$data_di_halaman_ini = $stmt_data->rowCount();
+$stmt_data->execute(); 
+                                                                                // Eksekusi query untuk mengambil data kelola
+$data_kelola = $stmt_data->fetchAll(PDO::FETCH_ASSOC);
+$data_di_halaman_ini = count($data_kelola);
 
 ?>
 <!DOCTYPE html>
 <html lang="id">
-<head>
+<head>                                                                          <!-- Header HTML umum -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Data Laboratorium</title>
@@ -164,28 +214,28 @@ $data_di_halaman_ini = $stmt_data->rowCount();
 </head>
 <body>
 
-    <div class="container">
-        
+    <div class="container">                                                     <!-- Kontainer utama halaman -->
+
         <header class="header">
-            <div class="header-title">
+            <div class="header-title">                                          <!-- Judul halaman dengan ikon -->
                 <img src="../../assets/img/ikon.png" alt="Ikon Lab" class="header-icon">
                 <h1>KELOLA DATA</h1>
             </div>
-            
-        <nav>
-            <a href="../dashboard.php">Beranda</a> |
-            <a href="#" class="active">Kelola Data</a>
-        </nav>
-            
+
+            <nav class="breadcrumbs">                                           <!-- Navigasi breadcrumb -->
+                <a href="../dashboard.php">Beranda</a> |
+                <a href="#" class="active">Kelola Data</a>
+            </nav>
+
         </header>
 
         <form class="card filter-card" method="GET" action="index.php" id="filterForm">
-            <div class="form-group">
+            <div class="form-group">                                            <!-- Grup input untuk pencarian -->
                 <label for="search">Search</label>
                 <input type="text" id="search" name="search" placeholder="Kode atau nama barang...."
                        value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
             </div>
-            <div class="form-group">
+            <div class="form-group">                                            <!-- Grup input untuk kategori -->
                 <label for="kategori">Kategori</label>
                 <select id="kategori" name="kategori">
                     <option value="semua" <?php echo (!isset($_GET['kategori']) || $_GET['kategori'] == 'semua') ? 'selected' : ''; ?>>Semua Kategori</option>
@@ -199,11 +249,11 @@ $data_di_halaman_ini = $stmt_data->rowCount();
                     <option value="18" <?php echo (isset($_GET['kategori']) && $_GET['kategori'] == '18') ? 'selected' : ''; ?>>Instrumen Lab</option>
                 </select>
             </div>
-            
-            <a href="add.php" class="btn btn-primary">+ Tambah Barang</a>
+
+             <a href="add.php" class="btn btn-primary">+ Tambah Barang</a>      <!-- Tombol tambah data barang -->
         </form>
 
-        <div class="card data-card">
+        <div class="card data-card">                                            <!-- Kartu data kelola barang -->
             <table class="data-table">
                 <thead>
                     <tr>
@@ -216,29 +266,29 @@ $data_di_halaman_ini = $stmt_data->rowCount();
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                
-                <tbody>
+
+                <tbody>                                                           <!-- Loop melalui data kelola dan tampilkan baris tabel --> 
                     <?php
                     if ($data_di_halaman_ini > 0):
                         $nomor = $data_awal + 1;
-                        
-                        while ($data = $stmt_data->fetch(PDO::FETCH_ASSOC)):
+
+                        foreach ($data_kelola as $data):
                     ?>
-                    <tr>
+                    <tr>                                                          <!-- Baris data barang -->
                         <td><?php echo $nomor++; ?></td>
                         <td><?php echo htmlspecialchars($data['id_item']); ?></td>
                         <td><?php echo htmlspecialchars($data['nama_item']); ?></td>
-                        <td><?php echo htmlspecialchars($data['nama_kategori']); ?></td> 
+                        <td><?php echo htmlspecialchars($data['nama_kategori']); ?></td>
                         <td><?php echo htmlspecialchars($data['satuan']); ?></td>
                         <td><?php echo htmlspecialchars($data['jumlah']); ?></td>
                         <td>
                             <a href="edit.php?id=<?php echo $data['id_item']; ?>" class="btn btn-edit">Edit</a>
-                            <a href="index.php?action=delete&id=<?php echo $data['id_item']; ?>" class="btn btn-delete" 
+                            <a href="index.php?action=delete&id=<?php echo $data['id_item']; ?>" class="btn btn-delete"
                                onclick="showDeleteModal(event, this.href);">Hapus</a>
                         </td>
                     </tr>
                     <?php
-                        endwhile;
+                        endforeach;
                     else:
                     ?>
                     <tr>
@@ -252,29 +302,29 @@ $data_di_halaman_ini = $stmt_data->rowCount();
                 </tbody>
             </table>
 
-            <div class="table-footer">
+            <div class="table-footer">                                               <!-- Footer tabel untuk info & pagination -->
                 <span class="footer-info">
                     Menampilkan <?php echo $data_di_halaman_ini; ?> dari <?php echo $total_data; ?> data
                 </span>
 
                 <?php if ($total_halaman > 1): ?>
                     <nav class="pagination">
-                        
+                        <?php ?>
                         <a href="<?php echo $link_prefix; ?>halaman=<?php echo $halaman_aktif - 1; ?>"
                            class="page-arrow <?php echo ($halaman_aktif <= 1) ? 'disabled' : ''; ?>">&lt;</a>
 
-                        <a href="#" class="page-number active"><?php echo $halaman_aktif; ?></a>
+                        <span class="page-number active"><?php echo $halaman_aktif; ?></span>
 
                         <a href="<?php echo $link_prefix; ?>halaman=<?php echo $halaman_aktif + 1; ?>"
                            class="page-arrow <?php echo ($halaman_aktif >= $total_halaman) ? 'disabled' : ''; ?>">&gt;</a>
                     </nav>
                 <?php endif; ?>
             </div>
-            
-        </div> 
 
-    </div> 
-    
+        </div>
+
+    </div>                                                                          <!-- Akhir kontainer utama -->
+
     <div id="deleteModal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <h4>Konfirmasi Hapus</h4>
@@ -286,7 +336,7 @@ $data_di_halaman_ini = $stmt_data->rowCount();
         </div>
     </div>
 
-    <script>
+    <script>                                                                            // Script untuk interaksi halaman
         document.getElementById('kategori').addEventListener('change', function() {
             this.form.submit();
         });
@@ -296,7 +346,7 @@ $data_di_halaman_ini = $stmt_data->rowCount();
         const btnConfirm = document.getElementById('modalConfirm');
 
         function showDeleteModal(event, deleteUrl) {
-            event.preventDefault(); 
+            event.preventDefault();
             btnConfirm.href = deleteUrl;
             modal.style.display = 'flex';
         }
